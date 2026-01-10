@@ -8,7 +8,7 @@ const About = () => {
   const isInView = useInView(ref, { once: true, threshold: 0.3 });
 
   const stats = [
-    { icon: HiCode, label: 'Years Experience', value: '3+' },
+    { icon: HiCode, label: 'Years Experience', value: '2+' },
     { icon: HiDeviceMobile, label: 'Mobile Apps Built', value: '10+' },
     { icon: HiServer, label: 'API Integrations', value: '25+' },
   ];
@@ -39,7 +39,7 @@ const About = () => {
             <div className="space-y-6">
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 I'm a passionate <strong className="text-neon-blue">Flutter Developer</strong> and 
-                <strong className="text-neon-purple"> Full Stack Engineer</strong> with 3+ years of expertise in 
+                <strong className="text-neon-purple"> Full Stack Engineer</strong> with 2+ years of expertise in 
                 building scalable cross-platform applications. Currently working as an Associate Software 
                 Developer at Levitica Technologies while also taking on exciting freelance projects.
               </p>
