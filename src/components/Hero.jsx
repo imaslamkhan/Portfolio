@@ -5,6 +5,7 @@ import { SiDart, SiFirebase, SiNodedotjs, SiFlutter } from 'react-icons/si';
 
 const Hero = () => {
   const scrollToProjects = () => {
+    
     document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -78,7 +79,7 @@ const Hero = () => {
                  Flutter Developer & Full Stack Engineer
               </p>
               <div className="flex items-center justify-center lg:justify-start gap-3 text-gray-500 dark:text-gray-400 text-base sm:text-lg">
-                <HiCode className="w-4 h-4 sm:w-5 sm:h-5" />
+                {/* <HiCode className="w-4 h-4 sm:w-5 sm:h-5" /> */}
                 <span>Crafting digital experiences that matter</span>
               </div>
             </motion.div>
