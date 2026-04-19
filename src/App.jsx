@@ -7,7 +7,6 @@ import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Services from './components/Services';
 import Achievements from './components/Achievements';
-import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 
@@ -23,7 +22,6 @@ function App() {
         <Projects />
         <Services />
         <Achievements />
-        <Testimonials />
         <Contact />
         <Footer />
       </div>

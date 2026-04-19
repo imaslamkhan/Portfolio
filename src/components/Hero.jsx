@@ -1,14 +1,71 @@
 import { motion } from 'framer-motion';
-import { HiDownload, HiEye, HiMail, HiCode, HiBriefcase } from 'react-icons/hi';
-import { FaGithub, FaLinkedin, FaReact } from 'react-icons/fa';
-import { SiDart, SiFirebase, SiNodedotjs, SiFlutter } from 'react-icons/si';
+import { useEffect, useState, useRef } from 'react';
+import { HiDownload, HiEye, HiMail } from 'react-icons/hi';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { SiDart, SiFirebase, SiNodedotjs, SiFlutter, SiReact } from 'react-icons/si';
+
+const ROLES = ['Flutter Developer', 'Full Stack Engineer', 'Mobile App Specialist', 'Cross-Platform Dev'];
+
+// Floating code snippets for background
+const CODE_SNIPPETS = [
+  'flutter build apk', 'await Future.wait()', 'StatefulWidget',
+  'app.listen(3000)', 'const [state, setState]', 'db.collection()',
+  'Widget build(ctx)', 'async/await', 'MongoDB.connect()',
+  'Navigator.push()', 'setState(() {})', 'res.json(data)',
+];
+
+const FloatingCode = ({ text, style }) => (
+  <motion.span
+    className="absolute font-mono text-xs text-blue-400/20 dark:text-blue-300/15 select-none pointer-events-none whitespace-nowrap"
+    style={style}
+    animate={{ y: [0, -18, 0], opacity: [0.4, 0.8, 0.4] }}
+    transition={{ duration: 4 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 3 }}
+  >
+    {text}
+  </motion.span>
+);
+
+const TypedRole = () => {
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [displayed, setDisplayed] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    const role = ROLES[roleIdx];
+    if (!deleting) {
+      if (displayed.length < role.length) {
+        timeoutRef.current = setTimeout(() => setDisplayed(role.slice(0, displayed.length + 1)), 60);
+      } else {
+        timeoutRef.current = setTimeout(() => setDeleting(true), 1800);
+      }
+    } else {
+      if (displayed.length > 0) {
+        timeoutRef.current = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 35);
+      } else {
+        setDeleting(false);
+        setRoleIdx((i) => (i + 1) % ROLES.length);
+      }
+    }
+    return () => clearTimeout(timeoutRef.current);
+  }, [displayed, deleting, roleIdx]);
+
+  return (
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+      {displayed}<span className="animate-pulse text-blue-400">|</span>
+    </span>
+  );
+};
 
 const Hero = () => {
-  const scrollToProjects = () => {
-    
-    document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const [codePositions] = useState(() =>
+    CODE_SNIPPETS.map(() => ({
+      top: `${5 + Math.random() * 85}%`,
+      left: `${Math.random() * 90}%`,
+    }))
+  );
 
+  const scrollToProjects = () => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
   const handleDownloadResume = () => {
     const link = document.createElement('a');
     link.href = '/resume.pdf';
@@ -25,262 +82,195 @@ const Hero = () => {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-16 md:pt-0">
-      {/* Background with gradient mesh */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/30 via-transparent to-purple-100/30 dark:from-blue-900/10 dark:via-transparent dark:to-purple-900/10"></div>
-      </div>
+      {/* Gradient bg */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950/20" />
+      {/* Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808010_1px,transparent_1px),linear-gradient(to_bottom,#80808010_1px,transparent_1px)] bg-[size:28px_28px]" />
+      {/* Blobs */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
+        className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl" />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2, delay: 0.5 }}
+        className="absolute bottom-20 right-20 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl" />
 
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="absolute top-10 left-4 w-40 h-40 md:top-20 md:left-10 md:w-64 md:h-64 bg-blue-300/10 rounded-full blur-2xl md:blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 0.5 }}
-          className="absolute bottom-10 right-4 w-48 h-48 md:bottom-20 md:right-20 md:w-80 md:h-80 bg-purple-300/10 rounded-full blur-2xl md:blur-3xl"
-        />
-      </div>
+      {/* Floating code */}
+      {CODE_SNIPPETS.map((snippet, i) => (
+        <FloatingCode key={i} text={snippet} style={codePositions[i]} />
+      ))}
 
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px] md:bg-[size:24px_24px]"></div>
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-80px)]">
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-0">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-12 items-center min-h-[calc(100vh-80px)]">
-          {/* Left Content */}
+          {/* Left */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center lg:text-left order-1 lg:order-1 mt-8 lg:mt-0 md:py-20"
+            className="text-center lg:text-left order-2 lg:order-1"
           >
-            {/* Title */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-4">
-              <span className="block text-gray-900 dark:text-white">
-                Hi, I'm
-              </span>
-              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent text-3xl sm:text-4xl md:text-4xl lg:text-4xl">
-                Mohammad Aslam Khan
+            {/* Badge */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200/60 dark:border-blue-800/40 rounded-full text-blue-600 dark:text-blue-400 text-sm font-medium mb-6"
+            >
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              Open to work · Hyderabad, India
+            </motion.div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
+              <span className="text-gray-900 dark:text-white">Hi, I'm </span>
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Aslam Khan
               </span>
             </h1>
 
-            {/* Subtitle */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mb-6"
-            >
-              <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-semibold mb-2">
-                 Flutter Developer & Full Stack Engineer
-              </p>
-              <div className="flex items-center justify-center lg:justify-start gap-3 text-gray-500 dark:text-gray-400 text-base sm:text-lg">
-                {/* <HiCode className="w-4 h-4 sm:w-5 sm:h-5" /> */}
-                <span>Crafting digital experiences that matter</span>
-              </div>
-            </motion.div>
+            <div className="text-xl sm:text-2xl font-semibold mb-6 h-10">
+              <TypedRole />
+            </div>
 
-            {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 leading-relaxed"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+              className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0"
             >
-              I specialize in building scalable cross-platform mobile applications 
-              and robust backend services. With over 2 years of experience, I've delivered 
-              impactful solutions for startups and enterprises alike. Passionate about 
-              clean code, performance optimization, and user-centric design.
+              Specialising in scalable cross-platform mobile apps and robust backend services.
+              Passionate about clean architecture, performance optimisation, and user-centric design.
             </motion.p>
 
-            {/* Tech Stack Icons */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-6 sm:mb-8"
+            {/* Tech icons */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+              className="flex items-center gap-4 mb-8 justify-center lg:justify-start"
             >
-              <span className="text-sm text-gray-500 dark:text-gray-400">Tech Stack:</span>
-              <div className="flex gap-3 flex-wrap justify-center lg:justify-start">
-                <SiFlutter className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" title="Flutter" />
-                <SiDart className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" title="Dart" />
-                <FaReact className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-500" title="React" />
-                <SiNodedotjs className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" title="Node.js" />
-                <SiFirebase className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" title="Firebase" />
+              <span className="text-sm text-gray-400 dark:text-gray-500">Stack:</span>
+              <div className="flex gap-3">
+                {[
+                  { Icon: SiFlutter, color: '#54C5F8', label: 'Flutter' },
+                  { Icon: SiDart, color: '#0553B1', label: 'Dart' },
+                  { Icon: SiReact, color: '#61DAFB', label: 'React' },
+                  { Icon: SiNodedotjs, color: '#339933', label: 'Node.js' },
+                  { Icon: SiFirebase, color: '#FFCA28', label: 'Firebase' },
+                ].map(({ Icon, color, label }) => (
+                  <motion.div key={label} title={label} whileHover={{ y: -3, scale: 1.15 }}
+                    className="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 cursor-default"
+                  >
+                    <Icon className="w-5 h-5" style={{ color }} />
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
 
             {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 sm:mb-8 max-w-xs sm:max-w-none mx-auto lg:mx-0"
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+              className="grid grid-cols-4 gap-3 mb-8 max-w-sm mx-auto lg:mx-0"
             >
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg backdrop-blur-sm">
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    {stat.label}
-                  </div>
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center p-3 bg-white/60 dark:bg-gray-800/60 rounded-xl backdrop-blur-sm border border-gray-100 dark:border-gray-700/50">
+                  <div className="text-xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
 
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8"
+            {/* Buttons */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
+              className="flex flex-col sm:flex-row gap-3 mb-8 justify-center lg:justify-start"
             >
-              <motion.button
-                onClick={scrollToProjects}
-                className="group relative px-6 py-3 sm:px-8 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg overflow-hidden flex items-center justify-center gap-2 w-full sm:w-auto"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+              <motion.button onClick={scrollToProjects}
+                className="group relative px-7 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl overflow-hidden flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-blue-500/25 transition-shadow duration-300"
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
               >
-                <HiEye className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-sm sm:text-base">View My Work</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <HiEye className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">View My Work</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.button>
 
-              <motion.button
-                onClick={handleDownloadResume}
-                className="px-6 py-3 sm:px-8 sm:py-3 border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:border-blue-500 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 flex items-center justify-center gap-2 w-full sm:w-auto"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+              <motion.button onClick={handleDownloadResume}
+                className="px-7 py-3 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:border-blue-500 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
               >
-                <HiDownload className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-sm sm:text-base">Download CV</span>
+                <HiDownload className="w-5 h-5" />
+                Download CV
               </motion.button>
             </motion.div>
 
-            {/* Social Links */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
+            {/* Social */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85 }}
+              className="flex items-center gap-4 justify-center lg:justify-start"
             >
-              <span className="text-sm text-gray-500 dark:text-gray-400">Connect with me:</span>
-              <div className="flex gap-3 sm:gap-4">
-                <motion.a
-                  href="mailto:aslamyakubkhan@gmail.com"
-                  className="p-2 sm:p-2.5 bg-white dark:bg-gray-800 rounded-full shadow-sm hover:shadow-md transition-shadow duration-300 group"
+              <span className="text-sm text-gray-400">Connect:</span>
+              {[
+                { href: 'mailto:aslamyakubkhan@gmail.com', Icon: HiMail, label: 'Email', hoverColor: 'group-hover:text-red-500' },
+                { href: 'https://linkedin.com/in/aslam-khan-ab657b223', Icon: FaLinkedin, label: 'LinkedIn', hoverColor: 'group-hover:text-blue-700' },
+                { href: 'https://github.com', Icon: FaGithub, label: 'GitHub', hoverColor: 'group-hover:text-gray-900 dark:group-hover:text-white' },
+              ].map(({ href, Icon, label, hoverColor }) => (
+                <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                  className={`group p-2.5 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-300`}
                   whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
                 >
-                  <HiMail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                  <Icon className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-colors duration-300 ${hoverColor}`} />
                 </motion.a>
-                <motion.a
-                  href="https://linkedin.com/in/aslam-khan-ab657b223"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 sm:p-2.5 bg-white dark:bg-gray-800 rounded-full shadow-sm hover:shadow-md transition-shadow duration-300 group"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaLinkedin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-700" />
-                </motion.a>
-                <motion.a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 sm:p-2.5 bg-white dark:bg-gray-800 rounded-full shadow-sm hover:shadow-md transition-shadow duration-300 group"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaGithub className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                </motion.a>
-              </div>
+              ))}
             </motion.div>
           </motion.div>
 
-          {/* Right Side - Profile Image */}
+          {/* Right — Profile */}
           <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative order-2 lg:order-2 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto lg:mx-0"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative order-1 lg:order-2 flex justify-center"
           >
-            {/* Image Container */}
-            <div className="relative">
-              {/* Main Image Frame */}
-              <div className="relative w-4/6 mx-auto  ">
-                {/* Glow effect behind image */}
-                <div className="absolute -inset-2 sm:-inset-3 md:-inset-4 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-2xl sm:rounded-3xl blur-lg sm:blur-xl"></div>
-                
-                {/* Image Container with Border Gradient */}
-                <div className="relative bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-900 rounded-xl sm:rounded-2xl p-1 sm:p-2">
-                  <div className="relative overflow-hidden rounded-xl sm:rounded-2xl">
-                    <img
-                      src="/Profile.jpg"
-                      alt="Mohammad Aslam Khan"
-                      className="w-full h-auto object-cover rounded-xl sm:rounded-2xl"
-                    />
-                  </div>
+            <div className="relative w-64 sm:w-72 md:w-80">
+              {/* Rotating ring */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                className="absolute -inset-4 rounded-full border-2 border-dashed border-blue-200/40 dark:border-blue-800/30"
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                className="absolute -inset-8 rounded-full border border-dashed border-purple-200/30 dark:border-purple-800/20"
+              />
+
+              {/* Glow */}
+              <div className="absolute -inset-3 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-2xl blur-xl" />
+
+              {/* Image */}
+              <div className="relative bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-1.5">
+                <div className="overflow-hidden rounded-xl">
+                  <img src="/Profile.jpg" alt="Mohammad Aslam Khan" className="w-full h-auto object-cover rounded-xl" />
                 </div>
-
-                {/* Floating Tech Cards - Only show on medium screens and above */}
-                <motion.div
-                  initial={{ y: 15, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8 }}
-                  className="absolute -right-2 sm:-right-4 md:-right-8 bottom-1/4 bg-white dark:bg-gray-800 p-2 sm:p-3 rounded-lg sm:rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hidden sm:block"
-                >
-                  <div className="flex items-center gap-2">
-                    <SiFlutter className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
-                    <span className="text-xs font-medium">Flutter Expert</span>
-                  </div>
-                </motion.div>
               </div>
 
-              {/* Experience Badge */}
-              <div className="absolute -bottom-3 sm:-bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-full shadow-lg">
-                <span className="font-semibold text-xs sm:text-sm">2+ Years Experience</span>
-              </div>
-            </div>
+              {/* Flutter badge */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0, y: [0, -6, 0] }}
+                transition={{ delay: 1, y: { duration: 3, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0 } }}
+                className="absolute -right-6 top-1/3 bg-white dark:bg-gray-800 px-3 py-2 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 flex items-center gap-2"
+              >
+                <SiFlutter className="w-4 h-4 text-blue-400" />
+                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">Flutter Expert</span>
+              </motion.div>
 
-            {/* Mobile Stats */}
-            <div className="flex justify-center gap-4 mt-6 sm:hidden">
-              <div className="text-center">
-                <div className="text-lg font-bold text-gray-900 dark:text-white">10+</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Projects</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-bold text-gray-900 dark:text-white">4+</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Clients</div>
+              {/* Exp badge */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-lg whitespace-nowrap">
+                2+ Years Experience
               </div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Scroll indicator - Only show on desktop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden lg:block"
+      {/* Scroll indicator */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:block"
       >
-        <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">Scroll to explore</div>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-5 h-8 border border-gray-300 dark:border-gray-600 rounded-full flex justify-center mx-auto"
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-xs text-gray-400">scroll</span>
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}
+            className="w-5 h-8 border border-gray-300 dark:border-gray-600 rounded-full flex justify-center"
           >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1 h-2 bg-gray-400 dark:bg-gray-500 rounded-full mt-2"
+            <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}
+              className="w-1 h-2 bg-gray-400 rounded-full mt-1.5"
             />
           </motion.div>
         </div>

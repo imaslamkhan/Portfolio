@@ -456,7 +456,7 @@ const Contact = () => {
             <div className="w-1 h-8 bg-gray-300 dark:bg-gray-700"></div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                50+
+                10+
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 Projects Completed

@@ -45,6 +45,7 @@ export default {
         'glow': 'glow 2s ease-in-out infinite alternate',
         'slide-up': 'slideUp 0.5s ease-out',
         'fade-in': 'fadeIn 0.5s ease-out',
+        'blob': 'blob 8s ease-in-out infinite',
       },
       keyframes: {
         float: {
