@@ -75,7 +75,7 @@ const Hero = () => {
 
   const stats = [
     { label: 'Projects', value: '10+' },
-    { label: 'Years Exp', value: '2+' },
+    { label: 'Years Exp', value: '1+' },
     { label: 'Clients', value: '4+' },
     { label: 'Tech Stack', value: '8+' },
   ];
@@ -109,10 +109,10 @@ const Hero = () => {
           >
             {/* Badge */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200/60 dark:border-blue-800/40 rounded-full text-blue-600 dark:text-blue-400 text-sm font-medium mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200/60 dark:border-blue-800/40 rounded-full text-blue-600 dark:text-blue-400 text-sm font-medium mb-6"
             >
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              Open to work · Hyderabad, India
+              Open to work 
             </motion.div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
@@ -236,7 +236,7 @@ const Hero = () => {
               {/* Image */}
               <div className="relative bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-1.5">
                 <div className="overflow-hidden rounded-xl">
-                  <img src="/Profile.jpg" alt="Mohammad Aslam Khan" className="w-full h-auto object-cover rounded-xl" />
+                  <img src="/akk.png" alt="Mohammad Aslam Khan" className="w-full h-auto object-cover rounded-xl" />
                 </div>
               </div>
 
@@ -253,7 +253,7 @@ const Hero = () => {
 
               {/* Exp badge */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-semibold px-5 py-2 rounded-full shadow-lg whitespace-nowrap">
-                2+ Years Experience
+                1+ Years Experience
               </div>
             </div>
           </motion.div>

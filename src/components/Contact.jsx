@@ -112,13 +112,13 @@ const Contact = () => {
       color: 'from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black dark:from-gray-600 dark:to-gray-700',
       textColor: 'text-gray-800 dark:text-gray-300'
     },
-    {
-      icon: FaTwitter,
-      label: 'Twitter',
-      url: '#',
-      color: 'from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700',
-      textColor: 'text-sky-500'
-    },
+    // {
+    //   icon: FaTwitter,
+    //   label: 'Twitter',
+    //   url: '#',
+    //   color: 'from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700',
+    //   textColor: 'text-sky-500'
+    // },
     {
       icon: FaWhatsapp,
       label: 'WhatsApp',
